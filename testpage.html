@@ -8,131 +8,103 @@
     --inner-bg: #0b2612;    
     --tile-bg: #1c3d25;     
     --text-primary: #75a478;
-    --grid-gap: 6px; 
+    --grid-gap: 8px; 
   }
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background-color: var(--outer-bg);
     font-family: 'Georgia', serif;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
     min-height: 100vh;
   }
 
-  /* The container now scales with the window */
+  /* Header & Controls */
+  .controls { width: 100%; max-width: 850px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  
+  .add-btn {
+    background-color: var(--tile-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+    transition: 0.3s;
+  }
+  .add-btn:hover { background-color: var(--text-primary); color: var(--inner-bg); }
+
   .calendar-container {
     width: 100%;
-    max-width: 800px; /* Limits size on large monitors */
+    max-width: 850px;
     background-color: var(--inner-bg);
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   }
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 10px;
-    color: var(--text-primary);
-  }
+  .header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; color: var(--text-primary); }
+  .header h1 { font-size: 2.2rem; font-weight: normal; }
+  .line { height: 1px; background-color: var(--text-primary); flex-grow: 1; }
 
-  .header h1 {
-    font-size: 2rem;
-    font-weight: normal;
-    background-color: var(--inner-bg);
-    padding: 0 10px;
-  }
+  .main-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--grid-gap); }
+  .weekday-label { color: var(--text-primary); font-size: 1.8rem; text-align: center; padding: 10px 0; }
 
-  .line {
-    height: 1px;
-    background-color: var(--text-primary);
-    flex-grow: 1;
-  }
-
-  /* One grid to rule them all - ensures perfect column alignment */
-  .main-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: var(--grid-gap);
-  }
-
-  .weekday-label {
-    color: var(--text-primary);
-    font-size: 1.8rem;
-    text-align: center;
-    padding: 10px 0;
-    /* Keeps labels outside the dark tile area visually */
-    background-color: var(--inner-bg); 
-  }
-
-  .day {
-    aspect-ratio: 1 / 1;
-    position: relative;
-    background-color: transparent; /* For empty days */
-    color: var(--text-primary);
-    overflow: hidden; /* Prevents text from pushing the box boundaries */
-  }
-
-  .day.active {
-    background-color: var(--tile-bg);
-    padding: 4px;
-  }
-
-  .date-num {
-    position: absolute;
-    top: 2px;
-    right: 4px;
-    font-size: 1.1rem;
-    font-family: Arial, sans-serif;
-    z-index: 2;
-  }
-
-  .details {
-    font-size: 0.6rem;
-    font-family: Arial, sans-serif;
-    line-height: 1.1;
-    margin-bottom: 2px;
-  }
+  .day { aspect-ratio: 1 / 1; position: relative; background-color: transparent; color: var(--text-primary); overflow: hidden; }
+  .day.active { background-color: var(--tile-bg); padding: 5px; }
+  .date-num { position: absolute; top: 2px; right: 5px; font-size: 1.2rem; font-family: Arial, sans-serif; }
+  .details { font-size: 0.6rem; font-family: Arial, sans-serif; line-height: 1.1; margin-top: 2px; }
 
   .box {
     border: 1px solid var(--text-primary);
+    margin-top: 4px;
     padding: 2px;
     text-align: center;
-    height: 55%; /* Keeps box size relative to the tile */
+    height: 62%;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+  .title { font-weight: bold; font-size: 0.6rem; text-transform: uppercase; }
+  .focus { font-size: 0.45rem; margin-top: 1px; line-height: 1; }
 
-  .title {
-    font-weight: bold;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    white-space: nowrap;
+  /* Modal Styles */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center; align-items: center;
+    z-index: 100;
   }
-
-  .focus {
-    font-size: 0.45rem;
-    margin-top: 1px;
-    line-height: 1;
+  .modal-content {
+    background-color: var(--inner-bg);
+    border: 2px solid var(--text-primary);
+    padding: 30px;
+    width: 400px;
+    color: var(--text-primary);
   }
-
-  /* For dates without classes */
-  .day.active.no-content {
-    background-color: var(--tile-bg);
+  .modal-content h2 { margin-bottom: 20px; font-weight: normal; }
+  .form-group { margin-bottom: 12px; display: flex; flex-direction: column; }
+  .form-group label { font-size: 0.8rem; margin-bottom: 4px; }
+  .form-group input, .form-group select {
+    background: var(--tile-bg);
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+    padding: 6px;
   }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions button { flex: 1; padding: 10px; cursor: pointer; border: 1px solid var(--text-primary); }
+  .save-btn { background: var(--text-primary); color: var(--inner-bg); font-weight: bold; }
+  .cancel-btn { background: transparent; color: var(--text-primary); }
 </style>
 </head>
 <body>
+
+<div class="controls">
+  <button class="add-btn" onclick="toggleModal(true)">+ Add Class</button>
+</div>
 
 <div class="calendar-container">
   <div class="header">
@@ -140,141 +112,112 @@
     <h1>January</h1>
     <div class="line"></div>
   </div>
+  <div class="main-grid" id="calendar-grid"></div>
+</div>
 
-  <div class="main-grid">
-    <div class="weekday-label">S</div><div class="weekday-label">M</div><div class="weekday-label">T</div>
-    <div class="weekday-label">W</div><div class="weekday-label">T</div><div class="weekday-label">F</div><div class="weekday-label">S</div>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <h2>New Schedule Entry</h2>
+    <form id="classForm">
+      <div class="form-group">
+        <label>Day of Month</label>
+        <select id="m-day" required></select>
+      </div>
+      <div class="form-group">
+        <label>Class Name</label>
+        <select id="m-name">
+          <option>Signature50</option>
+          <option>Power30</option>
+          <option>Focus50</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Instructor</label>
+        <input type="text" id="m-instructor" placeholder="e.g. Lisa M" required>
+      </div>
+      <div class="form-group"><label>Focus 1</label><select id="f1"><option>Hamstrings</option><option>Leg Wrap</option><option>Core</option></select></div>
+      <div class="form-group"><label>Focus 2</label><select id="f2"><option>Shoulders</option><option>Arm Wrap</option><option>Obliques</option></select></div>
+      <div class="form-group"><label>Focus 3</label><select id="f3"><option>Full Body</option><option>Biceps</option><option>Upper Body</option></select></div>
+      
+      <div style="display:flex; gap:10px;">
+        <div class="form-group" style="flex:1;"><label>Start Time</label><input type="time" id="m-start" required></div>
+        <div class="form-group" style="flex:1;"><label>End Time</label><input type="time" id="m-end" required></div>
+      </div>
 
-    <div class="day"></div><div class="day"></div><div class="day"></div><div class="day"></div>
-    <div class="day active">
-      <div class="date-num">1</div>
-      <div class="details">Bri S<br>6:00 am</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Hamstrings & Shoulder</div></div>
-    </div>
-    <div class="day active no-content"><div class="date-num">2</div></div>
-    <div class="day active">
-      <div class="date-num">3</div>
-      <div class="details">Sarah K<br>6:00 am</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Leg Wrap & Arm Wrap</div></div>
-    </div>
-
-    <div class="day active">
-      <div class="date-num">4</div>
-      <div class="details">Lisa M<br>7:00 am</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Hamstrings & Triceps</div></div>
-    </div>
-    <div class="day active">
-      <div class="date-num">5</div>
-      <div class="details">Lisa M<br>8:00 pm</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Outer Glutes & Biceps</div></div>
-    </div>
-    <div class="day active no-content"><div class="date-num">6</div></div>
-    <div class="day active">
-      <div class="date-num">7</div>
-      <div class="details">Stephanie S<br>6:00 pm</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Inner Thighs & Back</div></div>
-    </div>
-    <div class="day active">
-      <div class="date-num">8</div>
-      <div class="details">Stephanie S<br>4:20 am</div>
-      <div class="box"><div class="title">Power30</div><div class="focus">Leg Wrap</div></div>
-    </div>
-    <div class="day active">
-      <div class="date-num">9</div>
-      <div class="details">Jordan H<br>6:00 pm</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Hamstrings & Arm Wrap</div></div>
-    </div>
-    <div class="day active">
-      <div class="date-num">10</div>
-      <div class="details">Brittany O<br>7:00 pm</div>
-      <div class="box"><div class="title">Signature50</div><div class="focus">Center Glutes & Chest</div></div>
-    </div>
-
-    <div class="day active">
-        <div class="date-num">11</div>
-        <div class="details">Lisa M<br>7:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Leg Wrap & Shoulders</div></div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="toggleModal(false)">Cancel</button>
+        <button type="submit" class="save-btn">Add to Calendar</button>
       </div>
-      <div class="day active"><div class="date-num">12</div></div>
-      <div class="day active">
-        <div class="date-num">13</div>
-        <div class="details">Lisa M<br>9:00 pm</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active">
-        <div class="date-num">14</div>
-        <div class="details">Stephanie S<br>6:00 pm</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active">
-        <div class="date-num">15</div>
-        <div class="details">Stephanie S<br>5:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active"><div class="date-num">16</div></div>
-      <div class="day active">
-        <div class="date-num">17</div>
-        <div class="details">Ana T<br>7:00 am</div>
-        <div class="box"><div class="title">Focus50</div><div class="focus">Core + Obliques + Upper</div></div>
-      </div>
-  
-      <div class="day active">
-        <div class="date-num">18</div>
-        <div class="details">Lisa M<br>7:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active">
-        <div class="date-num">19</div>
-        <div class="details">Lisa M<br>8:00 pm</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active"><div class="date-num">20</div></div>
-      <div class="day active">
-        <div class="date-num">21</div>
-        <div class="details">Stephanie S<br>6:00 pm</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active"><div class="date-num">22</div></div>
-      <div class="day active">
-        <div class="date-num">23</div>
-        <div class="details">Sarah K<br>6:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active">
-        <div class="date-num">24</div>
-        <div class="details">Sarah K<br>7:00 am</div>
-        <div class="box"><div class="title">Focus50</div><div class="focus">Core + Obliques + Upper</div></div>
-      </div>
-  
-      <div class="day active">
-        <div class="date-num">25</div>
-        <div class="details">Lisa M<br>7:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active"><div class="date-num">26</div></div>
-      <div class="day active">
-        <div class="date-num">27</div>
-        <div class="details">Lisa M<br>9:00 pm</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active">
-        <div class="date-num">28</div>
-        <div class="details">Stephanie S<br>6:00 pm</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active">
-        <div class="date-num">29</div>
-        <div class="details">Stephanie S<br>5:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-      <div class="day active"><div class="date-num">30</div></div>
-      <div class="day active">
-        <div class="date-num">31</div>
-        <div class="details">Sarah K<br>6:00 am</div>
-        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
-      </div>
-    </div>
+    </form>
   </div>
-  
-  </body>
+</div>
+
+<script>
+  // Initial Data
+  let classData = [
+    { day: 1, instructor: "Bri S", time: "6:00 am", className: "Signature50", focus: "Hamstrings & Shoulder" }
+  ];
+
+  function toggleModal(show) {
+    document.getElementById('modalOverlay').style.display = show ? 'flex' : 'none';
+  }
+
+  // Populate Day Selector (1-31)
+  const daySelect = document.getElementById('m-day');
+  for(let i=1; i<=31; i++) {
+    let opt = document.createElement('option');
+    opt.value = i; opt.innerText = i;
+    daySelect.appendChild(opt);
+  }
+
+  // Helper to format 24h time to 12h
+  function formatTime(timeStr) {
+    let [h, m] = timeStr.split(':');
+    let ampm = h >= 12 ? 'pm' : 'am';
+    h = h % 12 || 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  // Handle Form Submission
+  document.getElementById('classForm').onsubmit = function(e) {
+    e.preventDefault();
+    
+    const newEntry = {
+      day: parseInt(document.getElementById('m-day').value),
+      instructor: document.getElementById('m-instructor').value,
+      time: formatTime(document.getElementById('m-start').value),
+      className: document.getElementById('m-name').value,
+      focus: `${document.getElementById('f1').value} & ${document.getElementById('f2').value}`
+    };
+
+    classData.push(newEntry);
+    toggleModal(false);
+    this.reset();
+    renderCalendar(classData, 3, 31); // Re-render
+  };
+
+  function renderCalendar(data, startOffset, totalDays) {
+    const grid = document.getElementById('calendar-grid');
+    grid.innerHTML = '';
+    const labels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    
+    labels.forEach(l => grid.insertAdjacentHTML('beforeend', `<div class="weekday-label">${l}</div>`));
+
+    for (let i = 0; i < startOffset; i++) grid.insertAdjacentHTML('beforeend', `<div class="day"></div>`);
+
+    for (let d = 1; d <= totalDays; d++) {
+      const schedule = data.find(item => item.day === d);
+      let content = `<div class="date-num">${d}</div>`;
+      if (schedule) {
+        content += `
+          <div class="details">${schedule.instructor}<br>${schedule.time}</div>
+          <div class="box"><div class="title">${schedule.className}</div><div class="focus">${schedule.focus}</div></div>`;
+      }
+      grid.insertAdjacentHTML('beforeend', `<div class="day active">${content}</div>`);
+    }
+  }
+
+  renderCalendar(classData, 3, 31);
+</script>
+</body>
 </html>
