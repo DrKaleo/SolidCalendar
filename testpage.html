@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --outer-bg: #4a6741;    
+    --inner-bg: #0b2612;    
+    --tile-bg: #1c3d25;     
+    --text-primary: #75a478;
+    --grid-gap: 6px; 
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--outer-bg);
+    font-family: 'Georgia', serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    min-height: 100vh;
+  }
+
+  /* The container now scales with the window */
+  .calendar-container {
+    width: 100%;
+    max-width: 800px; /* Limits size on large monitors */
+    background-color: var(--inner-bg);
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: normal;
+    background-color: var(--inner-bg);
+    padding: 0 10px;
+  }
+
+  .line {
+    height: 1px;
+    background-color: var(--text-primary);
+    flex-grow: 1;
+  }
+
+  /* One grid to rule them all - ensures perfect column alignment */
+  .main-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  .weekday-label {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    text-align: center;
+    padding: 10px 0;
+    /* Keeps labels outside the dark tile area visually */
+    background-color: var(--inner-bg); 
+  }
+
+  .day {
+    aspect-ratio: 1 / 1;
+    position: relative;
+    background-color: transparent; /* For empty days */
+    color: var(--text-primary);
+    overflow: hidden; /* Prevents text from pushing the box boundaries */
+  }
+
+  .day.active {
+    background-color: var(--tile-bg);
+    padding: 4px;
+  }
+
+  .date-num {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 1.1rem;
+    font-family: Arial, sans-serif;
+    z-index: 2;
+  }
+
+  .details {
+    font-size: 0.6rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.1;
+    margin-bottom: 2px;
+  }
+
+  .box {
+    border: 1px solid var(--text-primary);
+    padding: 2px;
+    text-align: center;
+    height: 55%; /* Keeps box size relative to the tile */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .focus {
+    font-size: 0.45rem;
+    margin-top: 1px;
+    line-height: 1;
+  }
+
+  /* For dates without classes */
+  .day.active.no-content {
+    background-color: var(--tile-bg);
+  }
+</style>
+</head>
+<body>
+
+<div class="calendar-container">
+  <div class="header">
+    <div class="line"></div>
+    <h1>January</h1>
+    <div class="line"></div>
+  </div>
+
+  <div class="main-grid">
+    <div class="weekday-label">S</div><div class="weekday-label">M</div><div class="weekday-label">T</div>
+    <div class="weekday-label">W</div><div class="weekday-label">T</div><div class="weekday-label">F</div><div class="weekday-label">S</div>
+
+    <div class="day"></div><div class="day"></div><div class="day"></div><div class="day"></div>
+    <div class="day active">
+      <div class="date-num">1</div>
+      <div class="details">Bri S<br>6:00 am</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Hamstrings & Shoulder</div></div>
+    </div>
+    <div class="day active no-content"><div class="date-num">2</div></div>
+    <div class="day active">
+      <div class="date-num">3</div>
+      <div class="details">Sarah K<br>6:00 am</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Leg Wrap & Arm Wrap</div></div>
+    </div>
+
+    <div class="day active">
+      <div class="date-num">4</div>
+      <div class="details">Lisa M<br>7:00 am</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Hamstrings & Triceps</div></div>
+    </div>
+    <div class="day active">
+      <div class="date-num">5</div>
+      <div class="details">Lisa M<br>8:00 pm</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Outer Glutes & Biceps</div></div>
+    </div>
+    <div class="day active no-content"><div class="date-num">6</div></div>
+    <div class="day active">
+      <div class="date-num">7</div>
+      <div class="details">Stephanie S<br>6:00 pm</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Inner Thighs & Back</div></div>
+    </div>
+    <div class="day active">
+      <div class="date-num">8</div>
+      <div class="details">Stephanie S<br>4:20 am</div>
+      <div class="box"><div class="title">Power30</div><div class="focus">Leg Wrap</div></div>
+    </div>
+    <div class="day active">
+      <div class="date-num">9</div>
+      <div class="details">Jordan H<br>6:00 pm</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Hamstrings & Arm Wrap</div></div>
+    </div>
+    <div class="day active">
+      <div class="date-num">10</div>
+      <div class="details">Brittany O<br>7:00 pm</div>
+      <div class="box"><div class="title">Signature50</div><div class="focus">Center Glutes & Chest</div></div>
+    </div>
+
+    <div class="day active">
+        <div class="date-num">11</div>
+        <div class="details">Lisa M<br>7:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Leg Wrap & Shoulders</div></div>
+      </div>
+      <div class="day active"><div class="date-num">12</div></div>
+      <div class="day active">
+        <div class="date-num">13</div>
+        <div class="details">Lisa M<br>9:00 pm</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active">
+        <div class="date-num">14</div>
+        <div class="details">Stephanie S<br>6:00 pm</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active">
+        <div class="date-num">15</div>
+        <div class="details">Stephanie S<br>5:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active"><div class="date-num">16</div></div>
+      <div class="day active">
+        <div class="date-num">17</div>
+        <div class="details">Ana T<br>7:00 am</div>
+        <div class="box"><div class="title">Focus50</div><div class="focus">Core + Obliques + Upper</div></div>
+      </div>
+  
+      <div class="day active">
+        <div class="date-num">18</div>
+        <div class="details">Lisa M<br>7:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active">
+        <div class="date-num">19</div>
+        <div class="details">Lisa M<br>8:00 pm</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active"><div class="date-num">20</div></div>
+      <div class="day active">
+        <div class="date-num">21</div>
+        <div class="details">Stephanie S<br>6:00 pm</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active"><div class="date-num">22</div></div>
+      <div class="day active">
+        <div class="date-num">23</div>
+        <div class="details">Sarah K<br>6:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active">
+        <div class="date-num">24</div>
+        <div class="details">Sarah K<br>7:00 am</div>
+        <div class="box"><div class="title">Focus50</div><div class="focus">Core + Obliques + Upper</div></div>
+      </div>
+  
+      <div class="day active">
+        <div class="date-num">25</div>
+        <div class="details">Lisa M<br>7:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active"><div class="date-num">26</div></div>
+      <div class="day active">
+        <div class="date-num">27</div>
+        <div class="details">Lisa M<br>9:00 pm</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active">
+        <div class="date-num">28</div>
+        <div class="details">Stephanie S<br>6:00 pm</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active">
+        <div class="date-num">29</div>
+        <div class="details">Stephanie S<br>5:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+      <div class="day active"><div class="date-num">30</div></div>
+      <div class="day active">
+        <div class="date-num">31</div>
+        <div class="details">Sarah K<br>6:00 am</div>
+        <div class="box"><div class="title">Signature50</div><div class="focus">Full Body</div></div>
+      </div>
+    </div>
+  </div>
+  
+  </body>
+</html>
