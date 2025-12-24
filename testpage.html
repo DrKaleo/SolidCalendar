@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <style>
+  /* These variables are now controlled by the Theme Modal */
   :root {
     --outer-bg: #4a6741;    
     --inner-bg: #0b2612;    
@@ -32,7 +33,6 @@
     min-height: 100vh;
   }
 
-  /* Navigation Controls */
   .controls { 
     width: 100%; 
     max-width: 850px; 
@@ -44,7 +44,7 @@
 
   .selectors { display: flex; gap: 10px; }
   
-  select.nav-select {
+  select.nav-select, .theme-btn {
     background: var(--inner-bg);
     color: var(--text-primary);
     border: 1px solid var(--text-primary);
@@ -61,7 +61,6 @@
     cursor: pointer;
   }
 
-  /* Calendar Container */
   .calendar-container { width: 100%; max-width: 850px; background-color: var(--inner-bg); padding: 20px; }
   .header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; color: var(--text-primary); }
   .header h1 { font-size: 2.2rem; font-weight: normal; text-transform: uppercase; }
@@ -70,7 +69,6 @@
   .main-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--grid-gap); }
   .weekday-label { color: var(--text-primary); font-size: 1.8rem; text-align: center; padding: 10px 0; }
 
-  /* Day Tiles */
   .day { aspect-ratio: 1 / 1; position: relative; background-color: transparent; color: var(--text-primary); overflow: hidden; }
   .day.active { background-color: var(--tile-bg); padding: 5px; cursor: pointer; transition: 0.1s; border: 1px solid transparent; }
   .day.active:hover { transform: scale(1.02); z-index: 5; box-shadow: 0 0 10px rgba(0,0,0,0.5); border-color: var(--text-primary); }
@@ -98,9 +96,9 @@
   .title { font-weight: bold; font-size: 0.55rem; text-transform: uppercase; }
   .focus-text { font-size: 0.45rem; margin-top: 1px; line-height: 1; opacity: 0.9; }
 
-  /* FIX: MODAL OVERLAY STYLES */
+  /* Modal Overlay */
   .modal-overlay {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     top: 0; left: 0; 
     width: 100%; height: 100%;
@@ -116,7 +114,6 @@
     padding: 25px;
     width: 480px;
     color: var(--text-primary);
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
   }
 
   .form-group { margin-bottom: 12px; display: flex; flex-direction: column; }
@@ -128,10 +125,12 @@
     padding: 8px;
   }
 
+  .color-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+  .color-item { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
+  .color-item input { width: 40px; height: 30px; border: 1px solid var(--text-primary); cursor: pointer; background: none; padding: 0; }
+
   .modal-actions { display: flex; gap: 10px; margin-top: 15px; }
   .modal-actions button { flex: 1; padding: 12px; cursor: pointer; border: 1px solid var(--text-primary); font-family: 'Georgia', serif; }
-  .save-btn { background: var(--text-primary); color: var(--inner-bg); font-weight: bold; }
-  .delete-btn { background: var(--danger); color: white; border: none !important; display: none; }
 </style>
 </head>
 <body>
@@ -140,6 +139,7 @@
   <div class="selectors">
     <select id="view-month" class="nav-select" onchange="changeDate()"></select>
     <select id="view-year" class="nav-select" onchange="changeDate()"></select>
+    <button class="theme-btn" onclick="openThemeModal()">🎨 Theme</button>
   </div>
   <button class="add-btn" onclick="openAddModal()">+ Add New Class</button>
 </div>
@@ -158,7 +158,6 @@
     <h2 id="modalTitle" style="margin-bottom:15px; font-weight:normal;">Add New Class</h2>
     <form id="classForm">
       <input type="hidden" id="edit-id">
-      
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <div class="form-group"><label>Day</label><select id="m-day" required></select></div>
         <div class="form-group">
@@ -174,62 +173,78 @@
             </select>
         </div>
       </div>
-
       <div class="form-group"><label>Instructor</label><input type="text" id="m-instructor" required></div>
-      
-      <div class="form-group">
-        <label>Muscle Focuses</label>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:5px;" id="focus-container"></div>
-      </div>
-      
+      <div class="form-group"><label>Muscle Focuses</label><div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:5px;" id="focus-container"></div></div>
       <div style="display:flex; gap:10px;">
         <div class="form-group" style="flex:1;"><label>Start Time</label><input type="time" id="m-start" required></div>
         <div class="form-group" style="flex:1;"><label>End Time</label><input type="time" id="m-end" required></div>
       </div>
-
       <div class="modal-actions">
-        <button type="button" class="delete-btn" id="deleteBtn" onclick="deleteEntry()">Delete</button>
+        <button type="button" style="background:#8b2e2e; color:white; border:none; display:none;" id="deleteBtn" onclick="deleteEntry()">Delete</button>
         <button type="button" style="background:transparent; color:var(--text-primary)" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="save-btn" id="saveBtn">Save Class</button>
+        <button type="submit" style="background:var(--text-primary); color:var(--inner-bg); font-weight:bold;">Save Class</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="themeModal">
+  <div class="modal-content">
+    <h2 style="margin-bottom:15px; font-weight:normal;">Customize Theme</h2>
+    
+    <div class="color-grid">
+      <div class="color-item"><input type="color" id="p-outer" value="#4a6741" oninput="uiTheme('--outer-bg', this.value)"><label>Outer BG</label></div>
+      <div class="color-item"><input type="color" id="p-inner" value="#0b2612" oninput="uiTheme('--inner-bg', this.value)"><label>Inner BG</label></div>
+      <div class="color-item"><input type="color" id="p-tile" value="#1c3d25" oninput="uiTheme('--tile-bg', this.value)"><label>Empty Tile</label></div>
+      <div class="color-item"><input type="color" id="p-text" value="#75a478" oninput="uiTheme('--text-primary', this.value)"><label>Text/Accents</label></div>
+      
+      <div style="grid-column: 1 / -1; height: 1px; background: var(--text-primary); opacity: 0.3; margin: 10px 0;"></div>
+      
+      <div class="color-item"><input type="color" id="p-starter" value="#78a2cc" oninput="uiTheme('--c-starter', this.value)"><label>Starter50</label></div>
+      <div class="color-item"><input type="color" id="p-foundation" value="#a2cc78" oninput="uiTheme('--c-foundation', this.value)"><label>Foundation50</label></div>
+      <div class="color-item"><input type="color" id="p-signature" value="#75a478" oninput="uiTheme('--c-signature', this.value)"><label>Signature50</label></div>
+      <div class="color-item"><input type="color" id="p-focus" value="#ccae78" oninput="uiTheme('--c-focus', this.value)"><label>Focus50</label></div>
+      <div class="color-item"><input type="color" id="p-power" value="#cc7878" oninput="uiTheme('--c-power', this.value)"><label>Power30</label></div>
+      <div class="color-item"><input type="color" id="p-adv" value="#b378cc" oninput="uiTheme('--c-advanced', this.value)"><label>Advanced</label></div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" style="background:var(--text-primary); color:var(--inner-bg); font-weight:bold;" onclick="closeThemeModal()">Done</button>
+    </div>
   </div>
 </div>
 
 <script>
   let currentMonth = new Date().getMonth();
   let currentYear = new Date().getFullYear();
-  let classData = []; 
+  let classData = [];
+  const CLASS_CONFIG = {
+  "Starter50": 50,
+  "Foundation50": 50,
+  "Signature50": 50,
+  "Focus50": 50,
+  "Power30": 30,
+  "Advanced50": 50,
+  "Advanced65": 65
+};
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  const focusOptions = `
-    <option value="">None</option>
-    <optgroup label="Lower Body">
-      <option>Center Glutes</option><option>Outer Glutes</option><option>Inner Thighs</option><option>Hamstrings</option><option>Leg Wrap</option>
-    </optgroup>
-    <optgroup label="Upper Body">
-      <option>Back</option><option>Shoulders</option><option>Biceps</option><option>Triceps</option><option>Chest</option><option>Arm Wrap</option>
-    </optgroup> 
-    <optgroup label="Core">
-        <option>Core & Obliques</option><option>Core</option><option>Obliques</option>
-    </optgroup>
-  `;
+  function uiTheme(variable, val) { document.documentElement.style.setProperty(variable, val); }
+  function openThemeModal() { document.getElementById('themeModal').style.display = 'flex'; }
+  function closeThemeModal() { document.getElementById('themeModal').style.display = 'none'; }
 
   function init() {
     const monthSelect = document.getElementById('view-month');
     const yearSelect = document.getElementById('view-year');
+    months.forEach((m, i) => monthSelect.insertAdjacentHTML('beforeend', `<option value="${i}" ${i === currentMonth ? 'selected' : ''}>${m}</option>`));
+    for(let y = currentYear - 1; y <= currentYear + 3; y++) yearSelect.insertAdjacentHTML('beforeend', `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`);
     
-    months.forEach((m, i) => {
-      monthSelect.insertAdjacentHTML('beforeend', `<option value="${i}" ${i === currentMonth ? 'selected' : ''}>${m}</option>`);
-    });
-
-    for(let y = currentYear - 1; y <= currentYear + 3; y++) {
-      yearSelect.insertAdjacentHTML('beforeend', `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`);
-    }
-
+    const focusOptions = `<option value="">None</option><optgroup label="Lower Body"><option>Center Glutes</option><option>Outer Glutes</option><option>Inner Thighs</option><option>Hamstrings</option><option>Leg Wrap</option></optgroup><optgroup label="Upper Body"><option>Back</option><option>Shoulders</option><option>Biceps</option><option>Triceps</option><option>Chest</option><option>Arm Wrap</option></optgroup><optgroup label="Core"><option>Core & Obliques</option><option>Core</option><option>Obliques</option></optgroup>`;
     document.getElementById('focus-container').innerHTML = `<select id="f1">${focusOptions}</select><select id="f2">${focusOptions}</select><select id="f3">${focusOptions}</select>`;
-    
+    // Add these to your initialization logic
+document.getElementById('m-start').addEventListener('input', autoFillEndTime);
+document.getElementById('m-name').addEventListener('change', autoFillEndTime);
     changeDate(); 
   }
 
@@ -244,53 +259,33 @@
     const grid = document.getElementById('calendar-grid');
     grid.innerHTML = '';
     ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(l => grid.insertAdjacentHTML('beforeend', `<div class="weekday-label">${l}</div>`));
-
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
     const mDaySelect = document.getElementById('m-day');
     mDaySelect.innerHTML = '';
-    for(let i=1; i<=daysInMonth; i++) {
-        mDaySelect.insertAdjacentHTML('beforeend', `<option value="${i}">${i}</option>`);
-    }
-
+    for(let i=1; i<=daysInMonth; i++) mDaySelect.insertAdjacentHTML('beforeend', `<option value="${i}">${i}</option>`);
     for (let i = 0; i < firstDay; i++) grid.insertAdjacentHTML('beforeend', `<div class="day"></div>`);
-
     for (let d = 1; d <= daysInMonth; d++) {
       const schedule = classData.find(item => item.day === d && item.month === currentMonth && item.year === currentYear);
       let content = `<div class="date-num">${d}</div>`;
-      
       if (schedule) {
         const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join(' & ');
-        content += `
-          <div class="details">${schedule.instructor}<br>${formatDisplayTime(schedule.startTime)}</div>
-          <div class="box ${schedule.className}">
-            <div class="title">${schedule.className}</div>
-            <div class="focus-text">${focuses}</div>
-          </div>`;
+        content += `<div class="details">${schedule.instructor}<br>${formatTime(schedule.startTime)}</div><div class="box ${schedule.className}"><div class="title">${schedule.className}</div><div class="focus-text">${focuses}</div></div>`;
       }
-      
-      grid.insertAdjacentHTML('beforeend', `
-        <div class="day active" onclick="${schedule ? `openEditModal(${schedule.id})` : `openAddModal(${d})`}">
-          ${content}
-        </div>`);
+      grid.insertAdjacentHTML('beforeend', `<div class="day active" onclick="${schedule ? `openEditModal(${schedule.id})` : `openAddModal(${d})`}">${content}</div>`);
     }
   }
 
-  function openAddModal(selectedDay) {
+  function openAddModal(d) {
     document.getElementById('classForm').reset();
     document.getElementById('edit-id').value = "";
-    document.getElementById('modalTitle').innerText = "Add New Class";
     document.getElementById('deleteBtn').style.display = "none";
-    if (selectedDay) document.getElementById('m-day').value = selectedDay;
+    if (d) document.getElementById('m-day').value = d;
     document.getElementById('modalOverlay').style.display = 'flex';
   }
 
   function openEditModal(id) {
     const item = classData.find(i => i.id == id);
-    if (!item) return;
-
-    document.getElementById('modalTitle').innerText = "Edit Class";
     document.getElementById('deleteBtn').style.display = "block";
     document.getElementById('edit-id').value = item.id;
     document.getElementById('m-day').value = item.day;
@@ -301,11 +296,11 @@
     document.getElementById('f1').value = item.focus1;
     document.getElementById('f2').value = item.focus2;
     document.getElementById('f3').value = item.focus3;
-
     document.getElementById('modalOverlay').style.display = 'flex';
   }
 
   function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+  function formatTime(t) { let [h, m] = t.split(':'); let ampm = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12; return `${h}:${m} ${ampm}`; }
 
   document.getElementById('classForm').onsubmit = function(e) {
     e.preventDefault();
@@ -313,8 +308,7 @@
     const entry = {
       id: id ? parseInt(id) : Date.now(),
       day: parseInt(document.getElementById('m-day').value),
-      month: currentMonth,
-      year: currentYear,
+      month: currentMonth, year: currentYear,
       instructor: document.getElementById('m-instructor').value,
       startTime: document.getElementById('m-start').value,
       endTime: document.getElementById('m-end').value,
@@ -323,29 +317,40 @@
       focus2: document.getElementById('f2').value,
       focus3: document.getElementById('f3').value
     };
-
-    if (id) {
-      classData = classData.map(item => item.id == id ? entry : item);
-    } else {
-      classData.push(entry);
-    }
+    if (id) classData = classData.map(item => item.id == id ? entry : item);
+    else classData.push(entry);
     closeModal();
     renderCalendar();
   };
 
   function deleteEntry() {
-    const id = document.getElementById('edit-id').value;
-    classData = classData.filter(i => i.id != id);
+    classData = classData.filter(i => i.id != document.getElementById('edit-id').value);
     closeModal();
     renderCalendar();
   }
+  function autoFillEndTime() {
+  const startTimeVal = document.getElementById('m-start').value;
+  const className = document.getElementById('m-name').value;
 
-  function formatDisplayTime(timeStr) {
-    let [h, m] = timeStr.split(':');
-    let ampm = h >= 12 ? 'pm' : 'am';
-    h = h % 12 || 12;
-    return `${h}:${m} ${ampm}`;
-  }
+  // Look up duration from our map. Default to 50 if not found.
+  const durationMinutes = CLASS_CONFIG[className] || 50;
+
+  if (!startTimeVal) return;
+
+  // Split start time (HH:mm)
+  const [hours, minutes] = startTimeVal.split(':').map(Number);
+  
+  // Create a date object to perform the math
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes + durationMinutes);
+
+  // Format back to 24hr string for the time picker
+  const endHours = String(date.getHours()).padStart(2, '0');
+  const endMinutes = String(date.getMinutes()).padStart(2, '0');
+  
+  document.getElementById('m-end').value = `${endHours}:${endMinutes}`;
+}
 
   init();
 </script>
