@@ -8,7 +8,16 @@
     --inner-bg: #0b2612;    
     --tile-bg: #1c3d25;     
     --text-primary: #75a478;
-    --grid-gap: 8px; 
+    --danger: #8b2e2e;
+    --grid-gap: 8px;
+
+    /* Class Type Colors */
+    --c-starter: #78a2cc;
+    --c-foundation: #a2cc78;
+    --c-signature: #75a478; 
+    --c-focus: #ccae78;
+    --c-power: #cc7878;
+    --c-advanced: #b378cc;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,37 +32,50 @@
     min-height: 100vh;
   }
 
-  /* Header & Controls */
-  .controls { width: 100%; max-width: 850px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  /* Navigation Controls */
+  .controls { 
+    width: 100%; 
+    max-width: 850px; 
+    margin-bottom: 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+  }
+
+  .selectors { display: flex; gap: 10px; }
   
+  select.nav-select {
+    background: var(--inner-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    padding: 5px 10px;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+  }
+
   .add-btn {
     background-color: var(--tile-bg);
     color: var(--text-primary);
     border: 1px solid var(--text-primary);
     padding: 10px 20px;
     cursor: pointer;
-    font-family: 'Georgia', serif;
-    transition: 0.3s;
-  }
-  .add-btn:hover { background-color: var(--text-primary); color: var(--inner-bg); }
-
-  .calendar-container {
-    width: 100%;
-    max-width: 850px;
-    background-color: var(--inner-bg);
-    padding: 20px;
   }
 
+  /* Calendar Container */
+  .calendar-container { width: 100%; max-width: 850px; background-color: var(--inner-bg); padding: 20px; }
   .header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; color: var(--text-primary); }
-  .header h1 { font-size: 2.2rem; font-weight: normal; }
+  .header h1 { font-size: 2.2rem; font-weight: normal; text-transform: uppercase; }
   .line { height: 1px; background-color: var(--text-primary); flex-grow: 1; }
 
   .main-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--grid-gap); }
   .weekday-label { color: var(--text-primary); font-size: 1.8rem; text-align: center; padding: 10px 0; }
 
+  /* Day Tiles */
   .day { aspect-ratio: 1 / 1; position: relative; background-color: transparent; color: var(--text-primary); overflow: hidden; }
-  .day.active { background-color: var(--tile-bg); padding: 5px; }
-  .date-num { position: absolute; top: 2px; right: 5px; font-size: 1.2rem; font-family: Arial, sans-serif; }
+  .day.active { background-color: var(--tile-bg); padding: 5px; cursor: pointer; transition: 0.1s; border: 1px solid transparent; }
+  .day.active:hover { transform: scale(1.02); z-index: 5; box-shadow: 0 0 10px rgba(0,0,0,0.5); border-color: var(--text-primary); }
+  
+  .date-num { position: absolute; top: 2px; right: 5px; font-size: 1.1rem; font-family: Arial, sans-serif; }
   .details { font-size: 0.6rem; font-family: Arial, sans-serif; line-height: 1.1; margin-top: 2px; }
 
   .box {
@@ -61,83 +83,104 @@
     margin-top: 4px;
     padding: 2px;
     text-align: center;
-    height: 62%;
+    height: 60%;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  .title { font-weight: bold; font-size: 0.6rem; text-transform: uppercase; }
-  .focus { font-size: 0.45rem; margin-top: 1px; line-height: 1; }
+  
+  .box.Starter50 { border-color: var(--c-starter); color: var(--c-starter); }
+  .box.Foundation50 { border-color: var(--c-foundation); color: var(--c-foundation); }
+  .box.Focus50 { border-color: var(--c-focus); color: var(--c-focus); }
+  .box.Power30 { border-color: var(--c-power); color: var(--c-power); }
+  .box.Advanced50, .box.Advanced65 { border-color: var(--c-advanced); color: var(--c-advanced); }
 
-  /* Modal Styles */
+  .title { font-weight: bold; font-size: 0.55rem; text-transform: uppercase; }
+  .focus-text { font-size: 0.45rem; margin-top: 1px; line-height: 1; opacity: 0.9; }
+
+  /* FIX: MODAL OVERLAY STYLES */
   .modal-overlay {
-    display: none;
+    display: none; /* Hidden by default */
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    justify-content: center; align-items: center;
-    z-index: 100;
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    justify-content: center; 
+    align-items: center;
+    z-index: 1000;
   }
+
   .modal-content {
     background-color: var(--inner-bg);
     border: 2px solid var(--text-primary);
-    padding: 30px;
-    width: 400px;
+    padding: 25px;
+    width: 480px;
     color: var(--text-primary);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
   }
-  .modal-content h2 { margin-bottom: 20px; font-weight: normal; }
+
   .form-group { margin-bottom: 12px; display: flex; flex-direction: column; }
-  .form-group label { font-size: 0.8rem; margin-bottom: 4px; }
+  .form-group label { font-size: 0.7rem; margin-bottom: 3px; text-transform: uppercase; opacity: 0.8; }
   .form-group input, .form-group select {
     background: var(--tile-bg);
     border: 1px solid var(--text-primary);
     color: var(--text-primary);
-    padding: 6px;
+    padding: 8px;
   }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-  .modal-actions button { flex: 1; padding: 10px; cursor: pointer; border: 1px solid var(--text-primary); }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 15px; }
+  .modal-actions button { flex: 1; padding: 12px; cursor: pointer; border: 1px solid var(--text-primary); font-family: 'Georgia', serif; }
   .save-btn { background: var(--text-primary); color: var(--inner-bg); font-weight: bold; }
-  .cancel-btn { background: transparent; color: var(--text-primary); }
+  .delete-btn { background: var(--danger); color: white; border: none !important; display: none; }
 </style>
 </head>
 <body>
 
 <div class="controls">
-  <button class="add-btn" onclick="toggleModal(true)">+ Add Class</button>
+  <div class="selectors">
+    <select id="view-month" class="nav-select" onchange="changeDate()"></select>
+    <select id="view-year" class="nav-select" onchange="changeDate()"></select>
+  </div>
+  <button class="add-btn" onclick="openAddModal()">+ Add New Class</button>
 </div>
 
 <div class="calendar-container">
   <div class="header">
     <div class="line"></div>
-    <h1>January</h1>
+    <h1 id="display-month">JANUARY</h1>
     <div class="line"></div>
   </div>
-  <div class="main-grid" id="calendar-grid"></div>
+  <div id="calendar-grid" class="main-grid"></div>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-content">
-    <h2>New Schedule Entry</h2>
+    <h2 id="modalTitle" style="margin-bottom:15px; font-weight:normal;">Add New Class</h2>
     <form id="classForm">
-      <div class="form-group">
-        <label>Day of Month</label>
-        <select id="m-day" required></select>
+      <input type="hidden" id="edit-id">
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div class="form-group"><label>Day</label><select id="m-day" required></select></div>
+        <div class="form-group">
+            <label>Class Type</label>
+            <select id="m-name">
+              <option value="Starter50">Starter50</option>
+              <option value="Foundation50">Foundation50</option>
+              <option value="Signature50" selected>Signature50</option>
+              <option value="Focus50">Focus50</option>
+              <option value="Power30">Power30</option>
+              <option value="Advanced50">Advanced50</option>
+              <option value="Advanced65">Advanced65</option>
+            </select>
+        </div>
       </div>
+
+      <div class="form-group"><label>Instructor</label><input type="text" id="m-instructor" required></div>
+      
       <div class="form-group">
-        <label>Class Name</label>
-        <select id="m-name">
-          <option>Signature50</option>
-          <option>Power30</option>
-          <option>Focus50</option>
-        </select>
+        <label>Muscle Focuses</label>
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:5px;" id="focus-container"></div>
       </div>
-      <div class="form-group">
-        <label>Instructor</label>
-        <input type="text" id="m-instructor" placeholder="e.g. Lisa M" required>
-      </div>
-      <div class="form-group"><label>Focus 1</label><select id="f1"><option>Hamstrings</option><option>Leg Wrap</option><option>Core</option></select></div>
-      <div class="form-group"><label>Focus 2</label><select id="f2"><option>Shoulders</option><option>Arm Wrap</option><option>Obliques</option></select></div>
-      <div class="form-group"><label>Focus 3</label><select id="f3"><option>Full Body</option><option>Biceps</option><option>Upper Body</option></select></div>
       
       <div style="display:flex; gap:10px;">
         <div class="form-group" style="flex:1;"><label>Start Time</label><input type="time" id="m-start" required></div>
@@ -145,79 +188,166 @@
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="cancel-btn" onclick="toggleModal(false)">Cancel</button>
-        <button type="submit" class="save-btn">Add to Calendar</button>
+        <button type="button" class="delete-btn" id="deleteBtn" onclick="deleteEntry()">Delete</button>
+        <button type="button" style="background:transparent; color:var(--text-primary)" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="save-btn" id="saveBtn">Save Class</button>
       </div>
     </form>
   </div>
 </div>
 
 <script>
-  // Initial Data
-  let classData = [
-    { day: 1, instructor: "Bri S", time: "6:00 am", className: "Signature50", focus: "Hamstrings & Shoulder" }
-  ];
+  let currentMonth = new Date().getMonth();
+  let currentYear = new Date().getFullYear();
+  let classData = []; 
 
-  function toggleModal(show) {
-    document.getElementById('modalOverlay').style.display = show ? 'flex' : 'none';
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  const focusOptions = `
+    <option value="">None</option>
+    <optgroup label="Lower Body">
+      <option>Center Glutes</option><option>Outer Glutes</option><option>Inner Thighs</option><option>Hamstrings</option><option>Leg Wrap</option>
+    </optgroup>
+    <optgroup label="Upper Body">
+      <option>Back</option><option>Shoulders</option><option>Biceps</option><option>Triceps</option><option>Chest</option><option>Arm Wrap</option>
+    </optgroup> 
+    <optgroup label="Core">
+        <option>Core & Obliques</option><option>Core</option><option>Obliques</option>
+    </optgroup>
+  `;
+
+  function init() {
+    const monthSelect = document.getElementById('view-month');
+    const yearSelect = document.getElementById('view-year');
+    
+    months.forEach((m, i) => {
+      monthSelect.insertAdjacentHTML('beforeend', `<option value="${i}" ${i === currentMonth ? 'selected' : ''}>${m}</option>`);
+    });
+
+    for(let y = currentYear - 1; y <= currentYear + 3; y++) {
+      yearSelect.insertAdjacentHTML('beforeend', `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`);
+    }
+
+    document.getElementById('focus-container').innerHTML = `<select id="f1">${focusOptions}</select><select id="f2">${focusOptions}</select><select id="f3">${focusOptions}</select>`;
+    
+    changeDate(); 
   }
 
-  // Populate Day Selector (1-31)
-  const daySelect = document.getElementById('m-day');
-  for(let i=1; i<=31; i++) {
-    let opt = document.createElement('option');
-    opt.value = i; opt.innerText = i;
-    daySelect.appendChild(opt);
+  function changeDate() {
+    currentMonth = parseInt(document.getElementById('view-month').value);
+    currentYear = parseInt(document.getElementById('view-year').value);
+    document.getElementById('display-month').innerText = months[currentMonth];
+    renderCalendar();
   }
 
-  // Helper to format 24h time to 12h
-  function formatTime(timeStr) {
+  function renderCalendar() {
+    const grid = document.getElementById('calendar-grid');
+    grid.innerHTML = '';
+    ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(l => grid.insertAdjacentHTML('beforeend', `<div class="weekday-label">${l}</div>`));
+
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    const mDaySelect = document.getElementById('m-day');
+    mDaySelect.innerHTML = '';
+    for(let i=1; i<=daysInMonth; i++) {
+        mDaySelect.insertAdjacentHTML('beforeend', `<option value="${i}">${i}</option>`);
+    }
+
+    for (let i = 0; i < firstDay; i++) grid.insertAdjacentHTML('beforeend', `<div class="day"></div>`);
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const schedule = classData.find(item => item.day === d && item.month === currentMonth && item.year === currentYear);
+      let content = `<div class="date-num">${d}</div>`;
+      
+      if (schedule) {
+        const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join(' & ');
+        content += `
+          <div class="details">${schedule.instructor}<br>${formatDisplayTime(schedule.startTime)}</div>
+          <div class="box ${schedule.className}">
+            <div class="title">${schedule.className}</div>
+            <div class="focus-text">${focuses}</div>
+          </div>`;
+      }
+      
+      grid.insertAdjacentHTML('beforeend', `
+        <div class="day active" onclick="${schedule ? `openEditModal(${schedule.id})` : `openAddModal(${d})`}">
+          ${content}
+        </div>`);
+    }
+  }
+
+  function openAddModal(selectedDay) {
+    document.getElementById('classForm').reset();
+    document.getElementById('edit-id').value = "";
+    document.getElementById('modalTitle').innerText = "Add New Class";
+    document.getElementById('deleteBtn').style.display = "none";
+    if (selectedDay) document.getElementById('m-day').value = selectedDay;
+    document.getElementById('modalOverlay').style.display = 'flex';
+  }
+
+  function openEditModal(id) {
+    const item = classData.find(i => i.id == id);
+    if (!item) return;
+
+    document.getElementById('modalTitle').innerText = "Edit Class";
+    document.getElementById('deleteBtn').style.display = "block";
+    document.getElementById('edit-id').value = item.id;
+    document.getElementById('m-day').value = item.day;
+    document.getElementById('m-instructor').value = item.instructor;
+    document.getElementById('m-name').value = item.className;
+    document.getElementById('m-start').value = item.startTime;
+    document.getElementById('m-end').value = item.endTime;
+    document.getElementById('f1').value = item.focus1;
+    document.getElementById('f2').value = item.focus2;
+    document.getElementById('f3').value = item.focus3;
+
+    document.getElementById('modalOverlay').style.display = 'flex';
+  }
+
+  function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+
+  document.getElementById('classForm').onsubmit = function(e) {
+    e.preventDefault();
+    const id = document.getElementById('edit-id').value;
+    const entry = {
+      id: id ? parseInt(id) : Date.now(),
+      day: parseInt(document.getElementById('m-day').value),
+      month: currentMonth,
+      year: currentYear,
+      instructor: document.getElementById('m-instructor').value,
+      startTime: document.getElementById('m-start').value,
+      endTime: document.getElementById('m-end').value,
+      className: document.getElementById('m-name').value,
+      focus1: document.getElementById('f1').value,
+      focus2: document.getElementById('f2').value,
+      focus3: document.getElementById('f3').value
+    };
+
+    if (id) {
+      classData = classData.map(item => item.id == id ? entry : item);
+    } else {
+      classData.push(entry);
+    }
+    closeModal();
+    renderCalendar();
+  };
+
+  function deleteEntry() {
+    const id = document.getElementById('edit-id').value;
+    classData = classData.filter(i => i.id != id);
+    closeModal();
+    renderCalendar();
+  }
+
+  function formatDisplayTime(timeStr) {
     let [h, m] = timeStr.split(':');
     let ampm = h >= 12 ? 'pm' : 'am';
     h = h % 12 || 12;
     return `${h}:${m} ${ampm}`;
   }
 
-  // Handle Form Submission
-  document.getElementById('classForm').onsubmit = function(e) {
-    e.preventDefault();
-    
-    const newEntry = {
-      day: parseInt(document.getElementById('m-day').value),
-      instructor: document.getElementById('m-instructor').value,
-      time: formatTime(document.getElementById('m-start').value),
-      className: document.getElementById('m-name').value,
-      focus: `${document.getElementById('f1').value} & ${document.getElementById('f2').value}`
-    };
-
-    classData.push(newEntry);
-    toggleModal(false);
-    this.reset();
-    renderCalendar(classData, 3, 31); // Re-render
-  };
-
-  function renderCalendar(data, startOffset, totalDays) {
-    const grid = document.getElementById('calendar-grid');
-    grid.innerHTML = '';
-    const labels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    
-    labels.forEach(l => grid.insertAdjacentHTML('beforeend', `<div class="weekday-label">${l}</div>`));
-
-    for (let i = 0; i < startOffset; i++) grid.insertAdjacentHTML('beforeend', `<div class="day"></div>`);
-
-    for (let d = 1; d <= totalDays; d++) {
-      const schedule = data.find(item => item.day === d);
-      let content = `<div class="date-num">${d}</div>`;
-      if (schedule) {
-        content += `
-          <div class="details">${schedule.instructor}<br>${schedule.time}</div>
-          <div class="box"><div class="title">${schedule.className}</div><div class="focus">${schedule.focus}</div></div>`;
-      }
-      grid.insertAdjacentHTML('beforeend', `<div class="day active">${content}</div>`);
-    }
-  }
-
-  renderCalendar(classData, 3, 31);
+  init();
 </script>
 </body>
 </html>
