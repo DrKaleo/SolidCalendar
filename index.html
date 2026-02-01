@@ -452,7 +452,11 @@
   <div class="calendar-container">
     <div class="header">
       <div class="line"></div>
-      <h1 id="display-month">JANUARY</h1>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <button class="theme-btn" onclick="prevMonth()" >&lt;</button>
+        <h1 id="display-month" style="text-align: center;">JANUARY</h1>
+        <button class="theme-btn" onclick="nextMonth()">&gt;</button>
+      </div>
       <div id="overall-count" style="
       font-size: 0.75rem;
       opacity: 0.85;
@@ -1013,8 +1017,40 @@ let currentYear = new Date().getFullYear();
 
     // -=-=-=-=-=-=-=- End of Instructor AutoComplete Logic -=-=-=-=-=-=-=-
 
+    
+    // -=-=-=-=-=-=-=- Next / Previous Month -=-=-=-=-=-=-=-=-=-=-
+    function prevMonth() {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      syncNavAndRender();
+    }
+
+    function nextMonth() {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      syncNavAndRender();
+    }
+
+    // Helper to update the dropdowns and refresh the view
+    function syncNavAndRender() {
+      document.getElementById('view-month').value = currentMonth;
+      document.getElementById('view-year').value = currentYear;
+      document.getElementById('display-month').innerText = months[currentMonth];
+      
+      loadThemeFromStorage(); // Apply the specific theme for this month
+      renderCalendar();
+    }
+    // -=-=-=-=-=-=-=- End of Next / Previous Month -=-=-=-=-=-=-=-=-=-=-
+
 
     // -=-=-=-=-=-=-=- Calendar Logic -=-=-=-=-=-=-=-
+    
     function changeDate() {
       currentMonth = parseInt(document.getElementById('view-month').value);
       currentYear = parseInt(document.getElementById('view-year').value);
