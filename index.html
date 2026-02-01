@@ -1090,7 +1090,6 @@ let currentYear = new Date().getFullYear();
       document.getElementById('m-start').addEventListener('input', autoFillEndTime);
       document.getElementById('m-name').addEventListener('change', autoFillEndTime);
       changeDate();
-      const originalInit = init;
       loadPresets();
       // Set initial picker values to match CSS defaults
       document.getElementById('p-outer').value = "#4a6741";
