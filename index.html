@@ -454,7 +454,7 @@
       <div class="line"></div>
       <div style="display: flex; align-items: center; gap: 20px;">
         <button class="theme-btn" onclick="prevMonth()" >&lt;</button>
-        <h1 id="display-month" style="text-align: center;">JANUARY</h1>
+        <h1 id="display-month" style="text-align: center;min-width:250px">JANUARY</h1>
         <button class="theme-btn" onclick="nextMonth()">&gt;</button>
       </div>
       <div id="overall-count" style="
@@ -1017,7 +1017,7 @@ let currentYear = new Date().getFullYear();
 
     // -=-=-=-=-=-=-=- End of Instructor AutoComplete Logic -=-=-=-=-=-=-=-
 
-    
+
     // -=-=-=-=-=-=-=- Next / Previous Month -=-=-=-=-=-=-=-=-=-=-
     function prevMonth() {
       currentMonth--;
