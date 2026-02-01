@@ -117,13 +117,6 @@
       padding: 10px 0;
     }
 
-    /* .day {
-      aspect-ratio: 1 / 1;
-      position: relative;
-      background-color: transparent;
-      color: var(--text-primary);
-      overflow: hidden;
-    } */
     .day {
       background: var(--inner-bg);
       border: 1px solid color-mix(in srgb, var(--text-primary) 20%, transparent);
@@ -193,10 +186,9 @@
 
     .date-num {
       position: relative;
-      top: 2px;
-      right: 5px;
       font-size: 1.1rem;
       font-family: Arial, sans-serif;
+      color: var(--text-primary);
     }
 
     .details {
@@ -204,6 +196,7 @@
       font-family: Arial, sans-serif;
       line-height: 1.1;
       margin-top: 2px;
+      color: var(--text-primary);
     }
 
     .box {
@@ -215,6 +208,9 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position:relative;
+      color: var(--text-primary);
+      overflow: hidden;
     }
 
     .box.Starter50 {
@@ -336,12 +332,6 @@
       font-family: 'Georgia', serif;
     }
 
-    /* .theme-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2px;
-      margin-top: 2px;
-    } */
     .theme-badges {
       display: flex;
       flex-wrap: wrap;
@@ -358,22 +348,16 @@
       text-transform: uppercase;
     }
 
-    /* .theme-badge {
-      font-size: 0.42rem;
-      padding: 1px 4px;
-      border: 1px solid var(--text-primary);
-      opacity: 0.9;
-      text-transform: uppercase;
-      white-space: nowrap;
-    } */
 
     .class-number {
       position: absolute;
-      bottom: 6px;
-      right: 8px;
+      bottom: 2px;
+      right: 4px;
       font-size: 0.55rem;
       font-weight: 600;
       opacity: 0.6;
+      line-height: 1; 
+      pointer-events: none; 
     }
     .day.today {
       outline: 2px solid var(--text-primary);
@@ -653,23 +637,6 @@ let currentYear = new Date().getFullYear();
     });
   }
 
-    // Update init to call loadPresets
-  const originalInit = init;
-  init = function () {
-    originalInit();
-    loadPresets();
-    // Set initial picker values to match CSS defaults
-    document.getElementById('p-outer').value = "#4a6741";
-    document.getElementById('p-inner').value = "#0b2612";
-    document.getElementById('p-tile').value = "#1c3d25";
-    document.getElementById('p-text').value = "#75a478";
-    document.getElementById('p-starter').value = "#78a2cc";
-    document.getElementById('p-foundation').value = "#a2cc78";
-    document.getElementById('p-signature').value = "#75a478";
-    document.getElementById('p-focus').value = "#ccae78";
-    document.getElementById('p-power').value = "#cc7878";
-    document.getElementById('p-adv').value = "#b378cc";
-  };
 
   // -=-=-=-=-=-=-=- End of Theme Logic -=-=-=-=-=-=-=-
 
@@ -808,7 +775,7 @@ let currentYear = new Date().getFullYear();
           const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join(' & ');
 
           // Logic to only show the number if it's 10, 20, 30, etc.
-          const showNumber = (schedule.classCount % 5 === 0) ?
+          const showNumber = (schedule.classCount % 10 === 0) ?
             `<div class="class-number">#${schedule.classCount}</div>` : '';
 
           content += `
@@ -1002,6 +969,7 @@ let currentYear = new Date().getFullYear();
     // -=-=-=-=-=-=-=- Init Logic -=-=-=-=-=-=-=-
     
     function init() {
+
       loadThemeFromStorage();
       loadClassesFromStorage();
       loadClassOffset();
@@ -1021,6 +989,20 @@ let currentYear = new Date().getFullYear();
       document.getElementById('m-start').addEventListener('input', autoFillEndTime);
       document.getElementById('m-name').addEventListener('change', autoFillEndTime);
       changeDate();
+      const originalInit = init;
+      loadPresets();
+      // Set initial picker values to match CSS defaults
+      document.getElementById('p-outer').value = "#4a6741";
+      document.getElementById('p-inner').value = "#0b2612";
+      document.getElementById('p-tile').value = "#1c3d25";
+      document.getElementById('p-text').value = "#75a478";
+      document.getElementById('p-starter').value = "#78a2cc";
+      document.getElementById('p-foundation').value = "#a2cc78";
+      document.getElementById('p-signature').value = "#75a478";
+      document.getElementById('p-focus').value = "#ccae78";
+      document.getElementById('p-power').value = "#cc7878";
+      document.getElementById('p-adv').value = "#b378cc";
+  
     }
 
     // -=-=-=-=-=-=-=- End of Init Logic -=-=-=-=-=-=-=-
