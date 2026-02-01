@@ -20,6 +20,13 @@
       --c-focus: #ccae78;
       --c-power: #cc7878;
       --c-advanced: #b378cc;
+
+      --t-starter: #ffffff;
+      --t-foundation: #ffffff;
+      --t-signature: #ffffff;
+      --t-focus: #ffffff;
+      --t-power: #ffffff;
+      --t-advanced: #ffffff;
     }
 
     * {
@@ -164,7 +171,7 @@
       line-height: 1.3;
     }
     .focus-text {
-      font-size: 0.55rem;
+      font-size: 0.75rem;
       opacity: 0.75;
       line-height: 1.2;
     }
@@ -186,15 +193,15 @@
 
     .date-num {
       position: relative;
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       font-family: Arial, sans-serif;
       color: var(--text-primary);
     }
 
     .details {
-      font-size: 0.6rem;
+      font-size: 0.75rem;
       font-family: Arial, sans-serif;
-      line-height: 1.1;
+      line-height: 1.2;
       margin-top: 2px;
       color: var(--text-primary);
     }
@@ -202,59 +209,39 @@
     .box {
       border: 1px solid var(--text-primary);
       margin-top: 4px;
-      padding: 2px;
+      padding: 6px 4px;
+      gap: 3px;
+      border-radius: 4px;
       text-align: center;
-      height: 60%;
+      height: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
       position:relative;
       color: var(--text-primary);
       overflow: hidden;
+      text-shadow: 0px 1px 2px rgba(0,0,0,0.3);
     }
-    .box.Signature50{
-      border-color: var(--c-signature);
-      color: var(--c-signature);
-    }
+    
 
-    .box.Starter50 {
-      border-color: var(--c-starter);
-      color: var(--c-starter);
-    }
 
-    .box.Foundation50 {
-      border-color: var(--c-foundation);
-      color: var(--c-foundation);
-    }
 
-    .box.Focus50 {
-      border-color: var(--c-focus);
-      color: var(--c-focus);
-    }
-
-    .box.Power30 {
-      border-color: var(--c-power);
-      color: var(--c-power);
-    }
-
-    .box.Advanced50,
-    .box.Advanced65 {
-      border-color: var(--c-advanced);
-      color: var(--c-advanced);
-    }
+    .box.Starter50    { background-color: var(--c-starter); color: var(--t-starter); }
+    .box.Foundation50 { background-color: var(--c-foundation); color: var(--t-foundation); }
+    .box.Signature50  { background-color: var(--c-signature); color: var(--t-signature); }
+    .box.Focus50      { background-color: var(--c-focus); color: var(--t-focus); }
+    .box.Power30      { background-color: var(--c-power); color: var(--t-power); }
+    .box.Advanced50, 
+    .box.Advanced65   { background-color: var(--c-advanced); color: var(--t-advanced); }
+ 
+    .box .title, .box .focus-text { color: inherit; }
 
     .title {
       font-weight: bold;
-      font-size: 0.55rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-
-    /* .focus-text {
-      font-size: 0.45rem;
-      margin-top: 1px;
-      line-height: 1;
-      opacity: 0.9;
-    } */
 
     /* Modal Overlay */
     .modal-overlay {
@@ -343,7 +330,7 @@
       margin-top: 4px;
     }
     .theme-badge {
-      font-size: 0.42rem;
+      font-size: 0.55rem;
       padding: 2px 6px;
       border-radius: 999px;
       border: 1px solid;
@@ -357,7 +344,7 @@
       position: absolute;
       bottom: 2px;
       right: 4px;
-      font-size: 0.55rem;
+      font-size: 0.75rem;
       font-weight: 600;
       opacity: 0.6;
       line-height: 1; 
@@ -503,18 +490,25 @@
         <div style="grid-column: 1 / -1; height: 1px; background: var(--text-primary); opacity: 0.3; margin: 10px 0;">
         </div>
 
-        <div class="color-item"><input type="color" id="p-starter"
-            oninput="uiTheme('--c-starter', this.value)"><label>Starter</label></div>
-        <div class="color-item"><input type="color" id="p-foundation"
-            oninput="uiTheme('--c-foundation', this.value)"><label>Foundation</label></div>
-        <div class="color-item"><input type="color" id="p-signature"
-            oninput="uiTheme('--c-signature', this.value)"><label>Signature</label></div>
-        <div class="color-item"><input type="color" id="p-focus"
-            oninput="uiTheme('--c-focus', this.value)"><label>Focus</label></div>
-        <div class="color-item"><input type="color" id="p-power"
-            oninput="uiTheme('--c-power', this.value)"><label>Power</label></div>
-        <div class="color-item"><input type="color" id="p-adv"
-            oninput="uiTheme('--c-advanced', this.value)"><label>Advanced</label></div>
+        <div class="color-item">
+          <input type="color" id="p-starter" oninput="uiTheme('--c-starter', this.value)">
+          <input type="color" id="pt-starter" oninput="uiTheme('--t-starter', this.value)">
+            <label>Starter (BG/Text)</label></div>
+        <div class="color-item"><input type="color" id="p-foundation" oninput="uiTheme('--c-foundation', this.value)">
+            <input type="color" id="pt-foundation" oninput="uiTheme('--t-foundation', this.value)">
+            <label>Foundation (BG/Text)</label></div>
+        <div class="color-item"><input type="color" id="p-signature" oninput="uiTheme('--c-signature', this.value)">
+            <input type="color" id="pt-signature" oninput="uiTheme('--t-signature', this.value)">
+            <label>Signature (BG/Text)</label></div>
+        <div class="color-item"><input type="color" id="p-focus" oninput="uiTheme('--c-focus', this.value)">
+            <input type="color" id="pt-focus" oninput="uiTheme('--t-focus', this.value)">
+            <label>Focus (BG/Text)</label></div>
+        <div class="color-item"><input type="color" id="p-power" oninput="uiTheme('--c-power', this.value)">
+            <input type="color" id="pt-power" oninput="uiTheme('--t-power', this.value)">
+            <label>Power (BG/Text)</label></div>
+        <div class="color-item"><input type="color" id="p-adv" oninput="uiTheme('--c-advanced', this.value)">
+            <input type="color" id="pt-adv" oninput="uiTheme('--t-advanced', this.value)">
+            <label>Advanced (BG/Text)</label></div>
       </div>
 
       <div class="modal-actions">
@@ -531,16 +525,9 @@ const CLASS_OFFSET_KEY = "lifetimeClassOffset_v1";
 const THEME_STORAGE_KEY = "calendarTheme_v1";
 
 const THEME_VARS = [
-  "--outer-bg",
-  "--inner-bg",
-  "--tile-bg",
-  "--text-primary",
-  "--c-starter",
-  "--c-foundation",
-  "--c-signature",
-  "--c-focus",
-  "--c-power",
-  "--c-advanced"
+  "--outer-bg", "--inner-bg", "--tile-bg", "--text-primary",
+  "--c-starter", "--c-foundation", "--c-signature", "--c-focus", "--c-power", "--c-advanced",
+  "--t-starter", "--t-foundation", "--t-signature", "--t-focus", "--t-power", "--t-advanced"
 ];
 
 const CLASS_CONFIG = {
@@ -556,53 +543,66 @@ const CLASS_CONFIG = {
 const THEMES = {
   "Signature": {
     outer: "#4a6741", inner: "#0b2612", tile: "#1c3d25", text: "#75a478",
-    starter: "#78a2cc", foundation: "#a2cc78", signature: "#75a478", focus: "#ccae78", power: "#cc7878", advanced: "#b378cc"
+    starter: "#78a2cc", foundation: "#a2cc78", signature: "#75a478", focus: "#ccae78", power: "#cc7878", advanced: "#b378cc",
+    ts: "#ffffff", tf: "#0b2612", tsi: "#ffffff", tfo: "#0b2612", tp: "#ffffff", ta: "#ffffff"
   },
   "Midnight": {
     outer: "#1a1a1a", inner: "#000000", tile: "#262626", text: "#ffffff",
-    starter: "#4a9eff", foundation: "#52c41a", signature: "#ffffff", focus: "#faad14", power: "#ff4d4f", advanced: "#722ed1"
+    starter: "#4a9eff", foundation: "#52c41a", signature: "#ffffff", focus: "#faad14", power: "#ff4d4f", advanced: "#722ed1",
+    ts: "#ffffff", tf: "#ffffff", tsi: "#000000", tfo: "#000000", tp: "#ffffff", ta: "#ffffff"
   },
   "Oceanic": {
     outer: "#1e3a5f", inner: "#0d1b2a", tile: "#1b263b", text: "#a2d2ff",
-    starter: "#48cae4", foundation: "#90be6d", signature: "#00b4d8", focus: "#ffd166", power: "#ef476f", advanced: "#be95ff"
+    starter: "#48cae4", foundation: "#90be6d", signature: "#00b4d8", focus: "#ffd166", power: "#ef476f", advanced: "#be95ff",
+    ts: "#0d1b2a", tf: "#0d1b2a", tsi: "#ffffff", tfo: "#0d1b2a", tp: "#ffffff", ta: "#ffffff"
   },
   "Espresso": {
     outer: "#3d2b1f", inner: "#1a0f0a", tile: "#2b1d16", text: "#d4a373",
-    starter: "#a5a58d", foundation: "#bcbd8b", signature: "#d4a373", focus: "#ddbea9", power: "#cb997e", advanced: "#b7b7a4"
+    starter: "#a5a58d", foundation: "#bcbd8b", signature: "#d4a373", focus: "#ddbea9", power: "#cb997e", advanced: "#b7b7a4",
+    ts: "#1a0f0a", tf: "#1a0f0a", tsi: "#1a0f0a", tfo: "#1a0f0a", tp: "#ffffff", ta: "#1a0f0a"
   },
   "Slate": {
     outer: "#4a5568", inner: "#1a202c", tile: "#2d3748", text: "#a0aec0",
-    starter: "#63b3ed", foundation: "#68d391", signature: "#a0aec0", focus: "#f6ad55", power: "#fc8181", advanced: "#b794f4"
+    starter: "#63b3ed", foundation: "#68d391", signature: "#a0aec0", focus: "#f6ad55", power: "#fc8181", advanced: "#b794f4",
+    ts: "#ffffff", tf: "#1a202c", tsi: "#1a202c", tfo: "#1a202c", tp: "#ffffff", ta: "#ffffff"
   },
   "Plum": {
     outer: "#4a2c4a", inner: "#2d162d", tile: "#3d1f3d", text: "#d6bcfa",
-    starter: "#9f7aea", foundation: "#fbb6ce", signature: "#d6bcfa", focus: "#faf089", power: "#f56565", advanced: "#ed64a6"
+    starter: "#9f7aea", foundation: "#fbb6ce", signature: "#d6bcfa", focus: "#faf089", power: "#f56565", advanced: "#ed64a6",
+    ts: "#ffffff", tf: "#2d162d", tsi: "#2d162d", tfo: "#2d162d", tp: "#ffffff", ta: "#ffffff"
   },
   "Crimson": {
     outer: "#63171b", inner: "#2d0a0c", tile: "#441013", text: "#feb2b2",
-    starter: "#fbd38d", foundation: "#9ae6b4", signature: "#feb2b2", focus: "#faf089", power: "#fff5f5", advanced: "#e9d8fd"
+    starter: "#fbd38d", foundation: "#9ae6b4", signature: "#feb2b2", focus: "#faf089", power: "#fff5f5", advanced: "#e9d8fd",
+    ts: "#2d0a0c", tf: "#2d0a0c", tsi: "#2d0a0c", tfo: "#2d0a0c", tp: "#2d0a0c", ta: "#2d0a0c"
   },
   "Forest": {
     outer: "#2d4a22", inner: "#14260f", tile: "#1e3617", text: "#9ae6b4",
-    starter: "#81e6d9", foundation: "#c6f6d5", signature: "#9ae6b4", focus: "#fefcbf", power: "#feb2b2", advanced: "#d6bcfa"
+    starter: "#81e6d9", foundation: "#c6f6d5", signature: "#9ae6b4", focus: "#fefcbf", power: "#feb2b2", advanced: "#d6bcfa",
+    ts: "#14260f", tf: "#14260f", tsi: "#14260f", tfo: "#14260f", tp: "#14260f", ta: "#14260f"
   },
   "Desert": {
     outer: "#744210", inner: "#2d1a05", tile: "#432808", text: "#f6e05e",
-    starter: "#fbd38d", foundation: "#c6f6d5", signature: "#f6e05e", focus: "#fff5f5", power: "#fc8181", advanced: "#e9d8fd"
+    starter: "#fbd38d", foundation: "#c6f6d5", signature: "#f6e05e", focus: "#fff5f5", power: "#fc8181", advanced: "#e9d8fd",
+    ts: "#2d1a05", tf: "#2d1a05", tsi: "#2d1a05", tfo: "#2d1a05", tp: "#ffffff", ta: "#2d1a05"
   },
   "Charcoal": {
     outer: "#2d3748", inner: "#171923", tile: "#2d3748", text: "#cbd5e0",
-    starter: "#bee3f8", foundation: "#c6f6d5", signature: "#cbd5e0", focus: "#feebc8", power: "#fed7d7", advanced: "#e9d8fd"
+    starter: "#bee3f8", foundation: "#c6f6d5", signature: "#cbd5e0", focus: "#feebc8", power: "#fed7d7", advanced: "#e9d8fd",
+    ts: "#171923", tf: "#171923", tsi: "#171923", tfo: "#171923", tp: "#171923", ta: "#171923"
   },
   "Rose": {
     outer: "#702459", inner: "#320923", tile: "#4d163d", text: "#fbb6ce",
-    starter: "#f6ad55", foundation: "#9ae6b4", signature: "#fbb6ce", focus: "#faf089", power: "#fc8181", advanced: "#d6bcfa"
+    starter: "#f6ad55", foundation: "#9ae6b4", signature: "#fbb6ce", focus: "#faf089", power: "#fc8181", advanced: "#d6bcfa",
+    ts: "#ffffff", tf: "#320923", tsi: "#320923", tfo: "#320923", tp: "#ffffff", ta: "#ffffff"
   },
   "Classic": {
     outer: "#2c5282", inner: "#1a365d", tile: "#2a4365", text: "#ebf8ff",
-    starter: "#90cdf4", foundation: "#9ae6b4", signature: "#ebf8ff", focus: "#faf089", power: "#feb2b2", advanced: "#e9d8fd"
+    starter: "#90cdf4", foundation: "#9ae6b4", signature: "#ebf8ff", focus: "#faf089", power: "#feb2b2", advanced: "#e9d8fd",
+    ts: "#1a365d", tf: "#1a365d", tsi: "#1a365d", tfo: "#1a365d", tp: "#1a365d", ta: "#1a365d"
   }
 };
+
 const months = [
   "January","February","March","April","May","June",
   "July","August","September","October","November","December"
@@ -633,12 +633,21 @@ let currentYear = new Date().getFullYear();
 
     // Class Type Colors (Only apply if they exist in the preset)
     if (t.starter) {
+      // Class Backgrounds
       uiTheme('--c-starter', t.starter);
       uiTheme('--c-foundation', t.foundation);
       uiTheme('--c-signature', t.signature);
       uiTheme('--c-focus', t.focus);
       uiTheme('--c-power', t.power);
       uiTheme('--c-advanced', t.advanced);
+
+      // Class Text Colors
+      uiTheme('--t-starter', t.ts);
+      uiTheme('--t-foundation', t.tf);
+      uiTheme('--t-signature', t.tsi);
+      uiTheme('--t-focus', t.tfo);
+      uiTheme('--t-power', t.tp);
+      uiTheme('--t-advanced', t.ta);
     }
 
     // Keep the color pickers in the modal updated
@@ -682,23 +691,30 @@ let currentYear = new Date().getFullYear();
     }
   }
   function syncThemePickers() {
-  const styles = getComputedStyle(document.documentElement);
+    const styles = getComputedStyle(document.documentElement);
 
-  // Helper to grab and trim CSS variables
-  const getVar = (name) => styles.getPropertyValue(name).trim();
+    // Helper to grab and trim CSS variables
+    const getVar = (name) => styles.getPropertyValue(name).trim();
 
-  document.getElementById('p-outer').value = getVar('--outer-bg');
-  document.getElementById('p-inner').value = getVar('--inner-bg');
-  document.getElementById('p-tile').value = getVar('--tile-bg');
-  document.getElementById('p-text').value = getVar('--text-primary');
-
+    // Class Backgrounds & Text
   document.getElementById('p-starter').value = getVar('--c-starter');
+  document.getElementById('pt-starter').value = getVar('--t-starter');
+  
   document.getElementById('p-foundation').value = getVar('--c-foundation');
+  document.getElementById('pt-foundation').value = getVar('--t-foundation');
+
   document.getElementById('p-signature').value = getVar('--c-signature');
+  document.getElementById('pt-signature').value = getVar('--t-signature');
+
   document.getElementById('p-focus').value = getVar('--c-focus');
+  document.getElementById('pt-focus').value = getVar('--t-focus');
+
   document.getElementById('p-power').value = getVar('--c-power');
+  document.getElementById('pt-power').value = getVar('--t-power');
+
   document.getElementById('p-adv').value = getVar('--c-advanced');
-}
+  document.getElementById('pt-adv').value = getVar('--t-advanced');
+  }
     
   function openThemeModal() { document.getElementById('themeModal').style.display = 'flex'; }
   function closeThemeModal() { document.getElementById('themeModal').style.display = 'none'; }
