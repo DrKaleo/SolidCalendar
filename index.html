@@ -106,6 +106,76 @@
       text-transform: uppercase;
     }
 
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--inner-bg);
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    z-index: 1002;
+    border: 1px solid var(--text-primary);
+    margin-top: 5px;
+  }
+
+  .dropdown-content button {
+    color: var(--text-primary);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+    .dropdown-content button:hover {
+      background-color: var(--tile-bg);
+    }
+
+    .dropdown.open .caret {
+      transform: rotate(180deg);
+    }
+
+    /* The Caret (Triangle) */
+    .caret {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 8px;
+      vertical-align: middle;
+      border-top: 5px solid; /* This uses the current text color */
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+      transition: transform 0.2s ease;
+    }
+
+  /* Rotate the caret when the menu is open */
+    .show + .dropdown-toggle .caret, 
+    .dropdown-toggle:active .caret {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .show { display: block; }
+
+    .dropdown.open .dropdown-toggle {
+      background-color: var(--tile-bg);
+      border-color: var(--text-primary);
+    }
+
     .line {
       height: 1px;
       background-color: var(--text-primary);
@@ -364,8 +434,17 @@
     <div class="selectors">
       <select id="view-month" class="nav-select" onchange="changeDate()"></select>
       <select id="view-year" class="nav-select" onchange="changeDate()"></select>
-      <button class="theme-btn" onclick="openClassOffsetPrompt()">🏁 Set Lifetime Count</button>
-      <button class="theme-btn" onclick="openThemeModal()">🎨 Theme</button>
+      <div class="dropdown">
+        <button class="theme-btn dropdown-toggle" onclick="toggleDropdown()">⚙️ Actions <span class="caret"></span></button>
+        <div id="actionsMenu" class="dropdown-content">
+          <button onclick="openClassOffsetPrompt()">🏁 Set Lifetime Count</button>
+          <button onclick="openThemeModal()">🎨 Theme Settings</button>
+          <hr style="border: 0; border-top: 1px solid var(--text-primary); opacity: 0.2; margin: 5px 0;">
+          <button onclick="exportData()">📤 Export Backup (.json)</button>
+          <button onclick="document.getElementById('importFile').click()">📥 Import Backup</button>
+        </div>
+      </div>
+      <input type="file" id="importFile" style="display:none" onchange="importData(event)" accept=".json">
     </div>
     <button class="add-btn" onclick="openAddModal()">+ Add New Class</button>
   </div>
@@ -777,6 +856,94 @@ let currentYear = new Date().getFullYear();
       localStorage.setItem(INSTRUCTOR_KEY, JSON.stringify(savedInstructors));
     }
     // -=-=-=-=-=-=-=- End of Local Storage Logic -=-=-=-=-=-=-=-
+
+    // -=-=-=-=-=-=-=- Import / Export Data Logic -=-=-=-=-=-=-=-
+    function exportData() {
+      // 1. Gather all related data from localStorage
+      const backup = {
+        classes: JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"),
+        instructors: JSON.parse(localStorage.getItem(INSTRUCTOR_KEY) || "[]"),
+        offset: localStorage.getItem(CLASS_OFFSET_KEY) || "0",
+        themes: {}
+      };
+
+      // 2. Loop through localStorage to find all monthly themes
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("calendarTheme_")) {
+          backup.themes[key] = JSON.parse(localStorage.getItem(key));
+        }
+      }
+
+      // 3. Create the file and trigger download
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", `class_calendar_backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchorNode);
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          
+          if (confirm("This will overwrite your current data. Are you sure?")) {
+            // Restore main data
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data.classes || []));
+            localStorage.setItem(INSTRUCTOR_KEY, JSON.stringify(data.instructors || []));
+            localStorage.setItem(CLASS_OFFSET_KEY, data.offset || "0");
+
+            // Restore all monthly themes
+            if (data.themes) {
+              Object.entries(data.themes).forEach(([key, val]) => {
+                localStorage.setItem(key, JSON.stringify(val));
+              });
+            }
+
+            alert("Data imported successfully! Refreshing page...");
+            location.reload(); // Refresh to apply all new settings
+          }
+        } catch (err) {
+          alert("Error parsing the file. Please make sure it's a valid calendar backup.");
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+    }
+    // -=-=-=-=-=-=-=- End of Import / Export Data Logic -=-=-=-=-=-=-=-
+
+    // -=-=-=-=-=-=-=- Toggle Drop Down Logic -=-=-=-=-=-=-=- 
+    function toggleDropdown() {
+      const container = document.querySelector('.dropdown');
+      const menu = document.getElementById("actionsMenu");
+      
+      // Toggle the classes
+      menu.classList.toggle("show");
+      container.classList.toggle("open");
+    }
+
+    // Close the dropdown if the user clicks anywhere else
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropdown-toggle')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        const containers = document.getElementsByClassName("dropdown");
+        
+        for (let i = 0; i < dropdowns.length; i++) {
+          dropdowns[i].classList.remove('show');
+        }
+        for (let i = 0; i < containers.length; i++) {
+          containers[i].classList.remove('open');
+        }
+      }
+    }
+    // -=-=-=-=-=-=-=- End of Toggle Drop Down Logic -=-=-=-=-=-=-=-
 
 
     // -=-=-=-=-=-=-=- Instructor AutoComplete Logic -=-=-=-=-=-=-=-
