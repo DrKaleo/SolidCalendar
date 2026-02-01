@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* These variables are now controlled by the Theme Modal */
     :root {
@@ -37,7 +38,7 @@
 
     body {
       background-color: var(--outer-bg);
-      font-family: 'Georgia', serif;
+      font-family: 'Merriweather', serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -65,7 +66,7 @@
       color: var(--text-primary);
       border: 1px solid var(--text-primary);
       padding: 5px 10px;
-      font-family: 'Georgia', serif;
+      font-family: 'Merriweather', serif;
       cursor: pointer;
     }
 
@@ -320,7 +321,7 @@
       padding: 12px;
       cursor: pointer;
       border: 1px solid var(--text-primary);
-      font-family: 'Georgia', serif;
+      font-family: 'Merriweather', serif;
     }
 
     .theme-badges {
@@ -696,24 +697,29 @@ let currentYear = new Date().getFullYear();
     // Helper to grab and trim CSS variables
     const getVar = (name) => styles.getPropertyValue(name).trim();
 
+    document.getElementById('p-outer').value = getVar('--outer-bg');
+    document.getElementById('p-inner').value = getVar('--inner-bg');
+    document.getElementById('p-tile').value = getVar('--tile-bg');
+    document.getElementById('p-text').value = getVar('--text-primary');
+    
     // Class Backgrounds & Text
-  document.getElementById('p-starter').value = getVar('--c-starter');
-  document.getElementById('pt-starter').value = getVar('--t-starter');
-  
-  document.getElementById('p-foundation').value = getVar('--c-foundation');
-  document.getElementById('pt-foundation').value = getVar('--t-foundation');
+    document.getElementById('p-starter').value = getVar('--c-starter');
+    document.getElementById('pt-starter').value = getVar('--t-starter');
+    
+    document.getElementById('p-foundation').value = getVar('--c-foundation');
+    document.getElementById('pt-foundation').value = getVar('--t-foundation');
 
-  document.getElementById('p-signature').value = getVar('--c-signature');
-  document.getElementById('pt-signature').value = getVar('--t-signature');
+    document.getElementById('p-signature').value = getVar('--c-signature');
+    document.getElementById('pt-signature').value = getVar('--t-signature');
 
-  document.getElementById('p-focus').value = getVar('--c-focus');
-  document.getElementById('pt-focus').value = getVar('--t-focus');
+    document.getElementById('p-focus').value = getVar('--c-focus');
+    document.getElementById('pt-focus').value = getVar('--t-focus');
 
-  document.getElementById('p-power').value = getVar('--c-power');
-  document.getElementById('pt-power').value = getVar('--t-power');
+    document.getElementById('p-power').value = getVar('--c-power');
+    document.getElementById('pt-power').value = getVar('--t-power');
 
-  document.getElementById('p-adv').value = getVar('--c-advanced');
-  document.getElementById('pt-adv').value = getVar('--t-advanced');
+    document.getElementById('p-adv').value = getVar('--c-advanced');
+    document.getElementById('pt-adv').value = getVar('--t-advanced');
   }
     
   function openThemeModal() { document.getElementById('themeModal').style.display = 'flex'; }
@@ -867,7 +873,7 @@ let currentYear = new Date().getFullYear();
           const themeBadges = (schedule.themes || []).map(t =>
             `<div class="theme-badge">${t}</div>`
           ).join('');
-          const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join(' ');
+          const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join('<br>');
 
           // Logic to only show the number if it's 10, 20, 30, etc.
           const showNumber = (schedule.classCount % 10 === 0) ?
@@ -1070,7 +1076,7 @@ let currentYear = new Date().getFullYear();
       loadClassOffset();
       loadInstructors();
       recalculateClassCounts();
-      syncThemePickers();
+
       
 
       const monthSelect = document.getElementById('view-month');
@@ -1078,7 +1084,7 @@ let currentYear = new Date().getFullYear();
       months.forEach((m, i) => monthSelect.insertAdjacentHTML('beforeend', `<option value="${i}" ${i === currentMonth ? 'selected' : ''}>${m}</option>`));
       for (let y = currentYear - 1; y <= currentYear + 3; y++) yearSelect.insertAdjacentHTML('beforeend', `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`);
 
-      const focusOptions = `<option value="">None</option><optgroup label="Lower Body"><option>Center Glutes</option><option>Outer Glutes</option><option>Inner Thighs</option><option>Hamstrings</option><option>Leg Wrap</option></optgroup><optgroup label="Upper Body"><option>Back</option><option>Shoulders</option><option>Biceps</option><option>Triceps</option><option>Chest</option><option>Arm Wrap</option></optgroup><optgroup label="Core"><option>Core & Obliques</option><option>Core</option><option>Obliques</option></optgroup>`;
+      const focusOptions = `<option value="">None</option><optgroup label="Lower Body"><option>Center Glutes</option><option>Outer Glutes</option><option>Inner Thighs</option><option>Hamstrings</option><option>Leg Wrap</option></optgroup><optgroup label="Upper Body"><option>Back</option><option>Shoulders</option><option>Biceps</option><option>Triceps</option><option>Chest</option><option>Arm Wrap</option></optgroup><optgroup label="Core"><option>Core Obliques</option><option>Core</option><option>Obliques</option></optgroup>`;
       document.getElementById('focus-container').innerHTML = `<select id="f1">${focusOptions}</select><select id="f2">${focusOptions}</select><select id="f3">${focusOptions}</select>`;
 
       document.getElementById('m-start').addEventListener('input', autoFillEndTime);
@@ -1097,6 +1103,7 @@ let currentYear = new Date().getFullYear();
       document.getElementById('p-focus').value = "#ccae78";
       document.getElementById('p-power').value = "#cc7878";
       document.getElementById('p-adv').value = "#b378cc";
+      syncThemePickers();
   
     }
 
