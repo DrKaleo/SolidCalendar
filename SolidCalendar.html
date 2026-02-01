@@ -212,6 +212,10 @@
       color: var(--text-primary);
       overflow: hidden;
     }
+    .box.Signature50{
+      border-color: var(--c-signature);
+      color: var(--c-signature);
+    }
 
     .box.Starter50 {
       border-color: var(--c-starter);
@@ -342,7 +346,7 @@
       font-size: 0.42rem;
       padding: 2px 6px;
       border-radius: 999px;
-      border: 1px solid var(--text-primary);
+      border: 1px solid;
       opacity: 0.85;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -548,8 +552,57 @@ const CLASS_CONFIG = {
   "Advanced50": 50,
   "Advanced65": 65
 };
-const THEMES = { "Signature": { outer: "#4a6741", inner: "#0b2612", tile: "#1c3d25", text: "#75a478" }, "Midnight": { outer: "#1a1a1a", inner: "#000000", tile: "#262626", text: "#ffffff" }, "Oceanic": { outer: "#1e3a5f", inner: "#0d1b2a", tile: "#1b263b", text: "#a2d2ff" }, "Espresso": { outer: "#3d2b1f", inner: "#1a0f0a", tile: "#2b1d16", text: "#d4a373" }, "Slate": { outer: "#4a5568", inner: "#1a202c", tile: "#2d3748", text: "#a0aec0" }, "Plum": { outer: "#4a2c4a", inner: "#2d162d", tile: "#3d1f3d", text: "#d6bcfa" }, "Crimson": { outer: "#63171b", inner: "#2d0a0c", tile: "#441013", text: "#feb2b2" }, "Forest": { outer: "#2d4a22", inner: "#14260f", tile: "#1e3617", text: "#9ae6b4" }, "Desert": { outer: "#744210", inner: "#2d1a05", tile: "#432808", text: "#f6e05e" }, "Charcoal": { outer: "#2d3748", inner: "#171923", tile: "#2d3748", text: "#cbd5e0" }, "Rose": { outer: "#702459", inner: "#320923", tile: "#4d163d", text: "#fbb6ce" }, "Classic": { outer: "#2c5282", inner: "#1a365d", tile: "#2a4365", text: "#ebf8ff" } };
 
+const THEMES = {
+  "Signature": {
+    outer: "#4a6741", inner: "#0b2612", tile: "#1c3d25", text: "#75a478",
+    starter: "#78a2cc", foundation: "#a2cc78", signature: "#75a478", focus: "#ccae78", power: "#cc7878", advanced: "#b378cc"
+  },
+  "Midnight": {
+    outer: "#1a1a1a", inner: "#000000", tile: "#262626", text: "#ffffff",
+    starter: "#4a9eff", foundation: "#52c41a", signature: "#ffffff", focus: "#faad14", power: "#ff4d4f", advanced: "#722ed1"
+  },
+  "Oceanic": {
+    outer: "#1e3a5f", inner: "#0d1b2a", tile: "#1b263b", text: "#a2d2ff",
+    starter: "#48cae4", foundation: "#90be6d", signature: "#00b4d8", focus: "#ffd166", power: "#ef476f", advanced: "#be95ff"
+  },
+  "Espresso": {
+    outer: "#3d2b1f", inner: "#1a0f0a", tile: "#2b1d16", text: "#d4a373",
+    starter: "#a5a58d", foundation: "#bcbd8b", signature: "#d4a373", focus: "#ddbea9", power: "#cb997e", advanced: "#b7b7a4"
+  },
+  "Slate": {
+    outer: "#4a5568", inner: "#1a202c", tile: "#2d3748", text: "#a0aec0",
+    starter: "#63b3ed", foundation: "#68d391", signature: "#a0aec0", focus: "#f6ad55", power: "#fc8181", advanced: "#b794f4"
+  },
+  "Plum": {
+    outer: "#4a2c4a", inner: "#2d162d", tile: "#3d1f3d", text: "#d6bcfa",
+    starter: "#9f7aea", foundation: "#fbb6ce", signature: "#d6bcfa", focus: "#faf089", power: "#f56565", advanced: "#ed64a6"
+  },
+  "Crimson": {
+    outer: "#63171b", inner: "#2d0a0c", tile: "#441013", text: "#feb2b2",
+    starter: "#fbd38d", foundation: "#9ae6b4", signature: "#feb2b2", focus: "#faf089", power: "#fff5f5", advanced: "#e9d8fd"
+  },
+  "Forest": {
+    outer: "#2d4a22", inner: "#14260f", tile: "#1e3617", text: "#9ae6b4",
+    starter: "#81e6d9", foundation: "#c6f6d5", signature: "#9ae6b4", focus: "#fefcbf", power: "#feb2b2", advanced: "#d6bcfa"
+  },
+  "Desert": {
+    outer: "#744210", inner: "#2d1a05", tile: "#432808", text: "#f6e05e",
+    starter: "#fbd38d", foundation: "#c6f6d5", signature: "#f6e05e", focus: "#fff5f5", power: "#fc8181", advanced: "#e9d8fd"
+  },
+  "Charcoal": {
+    outer: "#2d3748", inner: "#171923", tile: "#2d3748", text: "#cbd5e0",
+    starter: "#bee3f8", foundation: "#c6f6d5", signature: "#cbd5e0", focus: "#feebc8", power: "#fed7d7", advanced: "#e9d8fd"
+  },
+  "Rose": {
+    outer: "#702459", inner: "#320923", tile: "#4d163d", text: "#fbb6ce",
+    starter: "#f6ad55", foundation: "#9ae6b4", signature: "#fbb6ce", focus: "#faf089", power: "#fc8181", advanced: "#d6bcfa"
+  },
+  "Classic": {
+    outer: "#2c5282", inner: "#1a365d", tile: "#2a4365", text: "#ebf8ff",
+    starter: "#90cdf4", foundation: "#9ae6b4", signature: "#ebf8ff", focus: "#faf089", power: "#feb2b2", advanced: "#e9d8fd"
+  }
+};
 const months = [
   "January","February","March","April","May","June",
   "July","August","September","October","November","December"
@@ -570,16 +623,26 @@ let currentYear = new Date().getFullYear();
 
   function applyPreset(name) {
     const t = THEMES[name];
+    if (!t) return;
+
+    // Basic Theme Colors
     uiTheme('--outer-bg', t.outer);
     uiTheme('--inner-bg', t.inner);
     uiTheme('--tile-bg', t.tile);
     uiTheme('--text-primary', t.text);
 
-    // Sync pickers
-    document.getElementById('p-outer').value = t.outer;
-    document.getElementById('p-inner').value = t.inner;
-    document.getElementById('p-tile').value = t.tile;
-    document.getElementById('p-text').value = t.text;
+    // Class Type Colors (Only apply if they exist in the preset)
+    if (t.starter) {
+      uiTheme('--c-starter', t.starter);
+      uiTheme('--c-foundation', t.foundation);
+      uiTheme('--c-signature', t.signature);
+      uiTheme('--c-focus', t.focus);
+      uiTheme('--c-power', t.power);
+      uiTheme('--c-advanced', t.advanced);
+    }
+
+    // Keep the color pickers in the modal updated
+    syncThemePickers();
   }
 
   function saveThemeToStorage() {
@@ -590,37 +653,52 @@ let currentYear = new Date().getFullYear();
       theme[v] = styles.getPropertyValue(v).trim();
     });
 
-    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
+    // Save using the month-specific key
+    localStorage.setItem(getThemeKey(), JSON.stringify(theme));
+  }
+  function getThemeKey() {
+    return `calendarTheme_${currentYear}_${currentMonth}`;
   }
 
   function loadThemeFromStorage() {
-    const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (!saved) return;
+    const saved = localStorage.getItem(getThemeKey());
+    
+    // If no specific theme for this month exists, you can either 
+    // do nothing (keep default) or load a "Global" default.
+    if (!saved) {
+      // Optional: Reset to default Signature theme if no month theme is found
+      // applyPreset("Signature"); 
+      return;
+    }
 
     try {
       const theme = JSON.parse(saved);
       Object.entries(theme).forEach(([key, val]) => {
         document.documentElement.style.setProperty(key, val);
       });
+      syncThemePickers(); // Keep the color inputs in the modal matching
     } catch (e) {
-      console.warn("Failed to load saved theme");
+      console.warn("Failed to load saved theme for this month");
     }
   }
   function syncThemePickers() {
-    const styles = getComputedStyle(document.documentElement);
+  const styles = getComputedStyle(document.documentElement);
 
-    document.getElementById('p-outer').value = styles.getPropertyValue('--outer-bg').trim();
-    document.getElementById('p-inner').value = styles.getPropertyValue('--inner-bg').trim();
-    document.getElementById('p-tile').value = styles.getPropertyValue('--tile-bg').trim();
-    document.getElementById('p-text').value = styles.getPropertyValue('--text-primary').trim();
+  // Helper to grab and trim CSS variables
+  const getVar = (name) => styles.getPropertyValue(name).trim();
 
-    document.getElementById('p-starter').value = styles.getPropertyValue('--c-starter').trim();
-    document.getElementById('p-foundation').value = styles.getPropertyValue('--c-foundation').trim();
-    document.getElementById('p-signature').value = styles.getPropertyValue('--c-signature').trim();
-    document.getElementById('p-focus').value = styles.getPropertyValue('--c-focus').trim();
-    document.getElementById('p-power').value = styles.getPropertyValue('--c-power').trim();
-    document.getElementById('p-adv').value = styles.getPropertyValue('--c-advanced').trim();
-  }
+  document.getElementById('p-outer').value = getVar('--outer-bg');
+  document.getElementById('p-inner').value = getVar('--inner-bg');
+  document.getElementById('p-tile').value = getVar('--tile-bg');
+  document.getElementById('p-text').value = getVar('--text-primary');
+
+  document.getElementById('p-starter').value = getVar('--c-starter');
+  document.getElementById('p-foundation').value = getVar('--c-foundation');
+  document.getElementById('p-signature').value = getVar('--c-signature');
+  document.getElementById('p-focus').value = getVar('--c-focus');
+  document.getElementById('p-power').value = getVar('--c-power');
+  document.getElementById('p-adv').value = getVar('--c-advanced');
+}
     
   function openThemeModal() { document.getElementById('themeModal').style.display = 'flex'; }
   function closeThemeModal() { document.getElementById('themeModal').style.display = 'none'; }
@@ -752,6 +830,7 @@ let currentYear = new Date().getFullYear();
       currentMonth = parseInt(document.getElementById('view-month').value);
       currentYear = parseInt(document.getElementById('view-year').value);
       document.getElementById('display-month').innerText = months[currentMonth];
+      loadThemeFromStorage();
       renderCalendar();
     }
 
@@ -772,7 +851,7 @@ let currentYear = new Date().getFullYear();
           const themeBadges = (schedule.themes || []).map(t =>
             `<div class="theme-badge">${t}</div>`
           ).join('');
-          const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join(' & ');
+          const focuses = [schedule.focus1, schedule.focus2, schedule.focus3].filter(f => f).join(' ');
 
           // Logic to only show the number if it's 10, 20, 30, etc.
           const showNumber = (schedule.classCount % 10 === 0) ?
